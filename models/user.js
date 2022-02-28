@@ -63,7 +63,15 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+        },
+        coordinates: {
+            type: [Number],
+        }
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     isActive: {
@@ -79,7 +87,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: null
-    }
+    },
+    status: {
+        type: String,
+        default: 'pending'
+    },
 });
 
 

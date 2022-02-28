@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const institution = require("./institution");
 
 
 const requestorSchema = new mongoose.Schema({
@@ -41,6 +42,45 @@ const requestorSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     default: null,
+  },
+  donorLocation:{
+    type: {
+      type: String,
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+    },
+  },
+  institutionId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Institution",
+  },
+  institutionName:{
+    type:String
+  },
+  institutionAddress:{
+    type:String
+  },
+  institutionPhoneNumber:{
+    type:String
+  },
+  institutionEmail:{
+    type:String
+  },
+  institutionReferCode:{
+    type:String
+  },
+  institutionLocation:{
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+  },
+  coordinates: {
+      type: [Number],
+      required: true,
+  },
   },
 });
 
