@@ -22,10 +22,12 @@ app.use(fileUpload());
 const auth = require('./routes/auth');
 const donation = require('./routes/donation');
 const requestor = require('./routes/requestor');
+const institution = require('./routes/institution');
 
 app.use('/api/v1', auth)
 app.use('/api/v1', donation)
 app.use('/api/v1', requestor)
+app.use('/api/v1', institution)
 
 
 
