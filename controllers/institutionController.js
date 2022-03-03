@@ -70,3 +70,14 @@ exports.deleteInstitution = catchAsyncErrors(async (req, res, next) => {
     sendToken(institution, 200, res);
 });
 
+//get all institution list
+exports.getAllInstitution = catchAsyncErrors(async (req, res, next) => {    
+    const institution = await Institution.find();
+    res.status(200).json({
+        status: "success",
+        data: {
+            institution
+        }
+    });
+}
+);
