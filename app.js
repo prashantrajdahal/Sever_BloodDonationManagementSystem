@@ -9,6 +9,7 @@ const path = require('path')
 
 
 
+
 // Setting up config file 
 dotenv.config({ path: 'config/config.env' })
 const errorMiddleware = require('./middlewares/errors')

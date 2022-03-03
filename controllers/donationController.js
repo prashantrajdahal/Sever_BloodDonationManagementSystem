@@ -6,11 +6,8 @@ const Requestor = require('../models/requestor');
 // Request for donation a user   => /api/v1/requestDonation
 exports.requestDonation = catchAsyncErrors(async (req, res, next) => {
     const newUserData = {
-        donate: req.body.donate,
-        location: {
-            type: 'Point',
-            coordinates: [req.body.longitude, req.body.latitude],
-        },
+        donate: true,
+        location: req.body.location
     }
      
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
@@ -29,7 +26,7 @@ exports.requestDonation = catchAsyncErrors(async (req, res, next) => {
 //disable donation
 exports.disableDonation = catchAsyncErrors(async (req, res, next) => {
     const newUserData = {
-        donate: req.body.donate,
+        donate: false,
         location: {
             type: 'Point',
             coordinates: null,

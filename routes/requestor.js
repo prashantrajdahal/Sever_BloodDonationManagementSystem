@@ -7,7 +7,8 @@ const {
   selectDonor,
   getRequestorDetails,
   deleteRequestorDetails,
-  getAllRequestorDetails
+  getAllRequestorDetails,
+  getIdealDonor
 } = require("../controllers/requestorController");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
@@ -22,6 +23,7 @@ router.route("/request/details").get(isAuthenticatedUser, getRequestorDetails);
 router
   .route("/request/delete")
   .delete(isAuthenticatedUser, deleteRequestorDetails);
+router.route('/request/idealDonor').get(isAuthenticatedUser, getIdealDonor);
 
 //Done by admin
 router.route("/request/all").get(authorizeRoles("admin"), getAllRequestorDetails);

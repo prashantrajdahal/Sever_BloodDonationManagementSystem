@@ -10,7 +10,6 @@ exports.addInstitution = catchAsyncErrors(async (req, res, next) => {
         address,
         location,
         referCode,
-        createBy
         
     } = req.body;
     const institution = await Institution.create({
@@ -29,6 +28,38 @@ exports.addInstitution = catchAsyncErrors(async (req, res, next) => {
         }
     });
 });
+
+//update institution -admin
+exports.updateInstitution = catchAsyncErrors(async (req, res, next) => {
+    const {
+        institutionName,
+        email,
+        phoneNumber,
+        address,
+        location,
+        referCode,
+    } = req.body;
+    const institution = await Institution.findByIdAndUpdate(req.params.id, {
+        institutionName,
+        email,
+        phoneNumber,
+        address,
+        location,
+        referCode,
+        updateBy: req.user._id,
+    }, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    });
+    res.status(200).json({
+        status: "success",
+        data: {
+            institution
+        }
+    });
+});
+
 
 //delete institution -admin
 exports.deleteInstitution = catchAsyncErrors(async (req, res, next) => {

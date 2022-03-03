@@ -49,6 +49,15 @@ const institutionSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('Institution', institutionSchema);

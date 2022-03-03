@@ -4,7 +4,10 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Requestor = require("../models/requestor");
 
+
 //register requestor details
+
+
 exports.registerRequestor = catchAsyncErrors(async (req, res, next) => {
   const { patientName, email, phoneNumber, requireBloodType, covidStatus, institutionId, referCode } =
     req.body;
@@ -43,14 +46,13 @@ exports.registerRequestor = catchAsyncErrors(async (req, res, next) => {
 //find all user who is able to donate
 exports.getAbleToDonateDonarDetails = catchAsyncErrors(
   async (req, res, next) => {
-    const requestors = await Requestor.find({
-      requireBloodType: req.user.bloodType,
-      covidStatus: req.user.covidStatus,
+    const requestors = await Requestor.findOne({
+      user: req.user._id,
     });
     const donor = await User.find({
       donate: true,
-      bloodType: req.user.bloodType,
-      covidStatus: req.user.covidStatus,
+      bloodType: requestors.requireBloodType,
+      covidStatus: requestors.covidStatus,
     });
     res.status(200).json({
       success: true,
@@ -59,6 +61,38 @@ exports.getAbleToDonateDonarDetails = catchAsyncErrors(
     });
   }
 );
+
+//find ideal donor
+exports.getIdealDonor = catchAsyncErrors(async (req, res, next) => {
+  const requestors = await Requestor.findOne({
+    user: req.user._id,
+  });
+  const donor = await User.find({
+    donate: true,
+    bloodType: requestors.requireBloodType,
+    covidStatus: requestors.covidStatus,
+  });
+  const donorLocation= donor.map(point => {
+    return {
+      _id: point._id,
+      latitude: point.location.coordinates[1],
+      longitude: point.location.coordinates[0]
+    
+    }
+  })
+  const requestorPoint = {
+    latitude: requestors.institutionLocation.coordinates[1],
+    longitude: requestors.institutionLocation.coordinates[0]
+  }
+  const HaversineGeolocation = require("haversine-geolocation");
+  const getClosetDistance = HaversineGeolocation.getClosestPoint(donorLocation, requestorPoint);
+  const idealDonor = await User.findById(getClosetDistance._id);
+  res.status(200).json({
+    success: true,
+    idealDonor,
+    requestors,
+});
+});
 
 //select a user to donate
 exports.selectDonor = catchAsyncErrors(async (req, res, next) => {
@@ -80,6 +114,8 @@ exports.selectDonor = catchAsyncErrors(async (req, res, next) => {
     updateRequestor,
   });
 });
+
+
 
 
 //get user requestor details
