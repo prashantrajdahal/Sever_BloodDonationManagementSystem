@@ -10,10 +10,12 @@ const cloudinary = require('cloudinary');
 
 // Register a user   => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-
-    
-
     const { name, email, password ,bloodType, weight, covidStatus, phoneNumber, donate } = req.body;
+    const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: 'avatars',
+        width: 150,
+        crop: "scale"
+    });
 
     const user = await User.create({
         name,
@@ -23,7 +25,11 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         weight,
         phoneNumber,
         donate,
-        covidStatus
+        covidStatus,
+        avatar: {
+            public_id: result.public_id,
+            url: result.secure_url
+        }
     })
 
     sendToken(user, 200, res)

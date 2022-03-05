@@ -26,7 +26,7 @@ exports.registerRequestor = catchAsyncErrors(async (req, res, next) => {
       requireBloodType,
       covidStatus,
       user: req.user._id,
-      institutionid: institutionId,
+      institutionid: institution._id,
       institutionName: institution.name,
       institutionAddress: institution.address,
       institutionPhoneNumber: institution.phoneNumber,
