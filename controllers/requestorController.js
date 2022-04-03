@@ -32,7 +32,8 @@ exports.registerRequestor = catchAsyncErrors(async (req, res, next) => {
       institutionPhoneNumber: institution.phoneNumber,
       institutionEmail: institution.email,
       institutionReferCode: institution.referCode,
-      institutionLocation : institution.location
+      institutionLocation : institution.location,
+      donorIsSelected: false,
     });
   
     res.status(200).json({
@@ -52,12 +53,11 @@ exports.getAbleToDonateDonarDetails = catchAsyncErrors(
     const donor = await User.find({
       donate: true,
       bloodType: requestors.requireBloodType,
-      covidStatus: requestors.covidStatus,
+      covidStatus: requestors.covidStatus
     });
     res.status(200).json({
       success: true,
       donor,
-      requestors,
     });
   }
 );
@@ -91,49 +91,57 @@ exports.getIdealDonor = catchAsyncErrors(async (req, res, next) => {
     success: true,
     idealDonor,
     requestors,
+    
 });
 });
 
 //select a user to donate
 exports.selectDonor = catchAsyncErrors(async (req, res, next) => {
-  const { donor } = req.body;
+  const { donor, status } = req.body;
+  console.log(`donor is ${status}`);
   const donorUser = await User.findById(donor);
+  console.log(donorUser);
   const updateRequestor = await Requestor.findOneAndUpdate(
     { user: req.user._id },
-    { donor: donorUser._id, donorLocation: donorUser.location },
+    { donor: donorUser._id, donorLocation: donorUser.location, donorIsSelected: true, status: status },
     { new: true }
   );
   const updatedDonor = await User.findByIdAndUpdate(
     donorUser._id,
-    { requestor: updateRequestor._id, referBy: req.user._id },
+    { requestor: updateRequestor._id, referBy: req.user._id,status:"booked" },
     { new: true }
   );
 
   res.status(200).json({
     success: true,
-    updateRequestor,
+    updatedDonor,
   });
 });
-
-
-
 
 //get user requestor details
 exports.getRequestorDetails = catchAsyncErrors(async (req, res, next) => {
   const requestor = await Requestor.findOne({ user: req.user._id });
+  const donor = await User.findById(requestor.donor);
   res.status(200).json({
     success: true,
-    requestor,
+    donor,
   });
 } );
 
 //delete user requestor details
 exports.deleteRequestorDetails = catchAsyncErrors(async (req, res, next) => {
-  const requestor = await Requestor.findOneAndDelete({ user: req.user._id });
+  const requestor = await Requestor.findById({ user: req.body._id });
+  const donor = await User.findOneAndUpdate(
+    { _id: requestor.donor },
+    { requestor: null, status: "notUsed" },
+  )
+  await Requestor.findOneAndDelete({ user: req.user._id });
+
   res.status(200).json({
     success: true,
     requestor,
   });
+  
 } );
 
 //get all requestor details-admin

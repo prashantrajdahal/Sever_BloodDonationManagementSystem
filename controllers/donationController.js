@@ -9,6 +9,7 @@ exports.requestDonation = catchAsyncErrors(async (req, res, next) => {
         donate: true,
         location: req.body.location
     }
+    console.log(newUserData);
      
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
@@ -54,6 +55,7 @@ exports.checkIfRequested = catchAsyncErrors(async (req, res, next) => {
             success: true,
             requestor
         })
+        console.log(requestor);
     } else {
         res.status(200).json({
             success: true,

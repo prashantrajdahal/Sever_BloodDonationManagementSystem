@@ -33,6 +33,7 @@ const institutionSchema = new mongoose.Schema({
         coordinates: {
             type: [Number],
             required: true,
+            unique: true,
         },
     },
     referCode: {

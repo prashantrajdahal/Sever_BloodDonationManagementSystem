@@ -9,9 +9,9 @@ const {
 } = require("../controllers/donationController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
-router.route("/requestDonation").put(isAuthenticatedUser, requestDonation);
+router.route("/enableDonation").put(isAuthenticatedUser, requestDonation);
 router.route("/getDonarsDetails").get(isAuthenticatedUser, getDonarsDetails);
-router.route("/disableDonation").put(isAuthenticatedUser, disableDonation);
+router.route("/disableDonation").get(isAuthenticatedUser, disableDonation);
 router.route("/checkIfRequested").get(isAuthenticatedUser, checkIfRequested);
 
 router

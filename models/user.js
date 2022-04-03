@@ -53,7 +53,11 @@ const userSchema = new mongoose.Schema({
     },
     donate: {
         type: Boolean,
-        default: false
+        default: false,
+    },
+    status:{
+        type: String,
+        default: 'notUsed',
     },
     role: {
         type: String,
@@ -92,6 +96,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'pending'
     },
+    donorIsSelected: {
+        default: false,
+    }
 });
 
 

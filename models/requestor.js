@@ -18,18 +18,19 @@ const requestorSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter your email"],
-    unique: true,
+    unique: [true, "This email is already registered"],
     validate: [validator.isEmail, "Please enter valid email address"],
   },
   phoneNumber: {
     type: String,
     required: [true, "Please enter your phone number"],
-    unique: true,
+    unique: [true, "This phone number is already registered"],
     validate: [validator.isMobilePhone, "Please enter valid phone number"],
   },
   requireBloodType: {
     type: String,
     required: [true, "Please enter your blood type"],
+    
   },
   covidStatus: {
     type: String,
